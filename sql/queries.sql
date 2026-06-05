@@ -1,40 +1,46 @@
--- 1
-SELECT COUNT(*) FROM 01_fund_master;
+-- 1. Top 5 Funds by AUM
+SELECT scheme_name, aum_crore
+FROM 07_scheme_performance
+ORDER BY aum_crore DESC
+LIMIT 5;
 
--- 2
-SELECT COUNT(*) FROM 02_nav_history;
+-- 2. Average NAV
+SELECT AVG(nav) AS avg_nav
+FROM 02_nav_history;
 
--- 3
-SELECT COUNT(*) FROM 08_investor_transactions;
+-- 3. SIP Inflow Growth
+SELECT month, yoy_growth_pct
+FROM 04_monthly_sip_inflows;
 
--- 4
-SELECT fund_house, COUNT(*) AS funds
-FROM 01_fund_master
-GROUP BY fund_house;
-
--- 5
-SELECT transaction_type, COUNT(*)
+-- 4. Transactions by State
+SELECT state, COUNT(*) AS total_transactions
 FROM 08_investor_transactions
-GROUP BY transaction_type;
+GROUP BY state
+ORDER BY total_transactions DESC;
 
--- 6
-SELECT state, SUM(amount_inr)
-FROM 08_investor_transactions
-GROUP BY state;
+-- 5. Funds with Expense Ratio < 1%
+SELECT scheme_name, expense_ratio_pct
+FROM 07_scheme_performance
+WHERE expense_ratio_pct < 1;
 
--- 7
+-- 6. Average 3-Year Return by Category
 SELECT category, AVG(return_3yr_pct)
 FROM 07_scheme_performance
 GROUP BY category;
 
--- 8
+-- 7. Transaction Amount by State
+SELECT state, SUM(amount_inr)
+FROM 08_investor_transactions
+GROUP BY state;
+
+-- 8. Highest NAV Recorded
 SELECT MAX(nav)
 FROM 02_nav_history;
 
--- 9
+-- 9. Lowest NAV Recorded
 SELECT MIN(nav)
 FROM 02_nav_history;
 
--- 10
+-- 10. Average Expense Ratio
 SELECT AVG(expense_ratio_pct)
 FROM 07_scheme_performance;
